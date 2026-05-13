@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as MediaLibrary from 'expo-media-library';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { getMarkerHTML } from '../ar/markerAR';
 import { getFaceHTML } from '../ar/faceAR';
 import { getWorldHTML } from '../ar/worldAR';
@@ -32,23 +32,26 @@ export default function ARScreen({ navigation, route }) {
 
   // ── Save photo sent from WebView ────────────────────────────────────────
   const handleCapture = async (base64Data) => {
-    if (saving) return;
-    setSaving(true);
-    Vibration.vibrate(40);
-    try {
-      // Strip data URL prefix
-      const raw = base64Data.replace(/^data:image\/\w+;base64,/, '');
-      const uri = FileSystem.cacheDirectory + `ar_capture_${Date.now()}.jpg`;
-      await FileSystem.writeAsStringAsync(uri, raw, { encoding: 'base64' });
-      const asset = await MediaLibrary.createAssetAsync(uri);
-      await MediaLibrary.createAlbumAsync('AR Studio', asset, false);
-      Alert.alert('✓ Saved', 'AR photo saved to your gallery.');
-    } catch (e) {
-      Alert.alert('Error saving', e.message);
-    } finally {
-      setSaving(false);
-    }
-  };
+  if (saving) return;
+  setSaving(true);
+  Vibration.vibrate(40);
+  try {
+    const raw = base64Data.replace(/^data:image\/\w+;base64,/, '');
+    const uri = FileSystem.cacheDirectory + `ar_capture_${Date.now()}.jpg`;
+    
+    // NEW API — replaces deprecated writeAsStringAsync
+    const file = new FileSystem.File(uri);
+    await file.write(raw, { encoding: 'base64' });
+    
+    const asset = await MediaLibrary.createAssetAsync(uri);
+    await MediaLibrary.createAlbumAsync('AR Studio', asset, false);
+    Alert.alert('✓ Saved', 'AR photo saved to your gallery.');
+  } catch (e) {
+    Alert.alert('Error saving', e.message);
+  } finally {
+    setSaving(false);
+  }
+};
 
   // ── Messages from the WebView page ─────────────────────────────────────
   const onMessage = (event) => {
