@@ -18,17 +18,26 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.READ_MEDIA_IMAGES",
         "android.permission.READ_MEDIA_VIDEO",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.READ_MEDIA_AUDIO"
       ]
     },
     "plugins": [
       [
         "expo-camera",
-        { "cameraPermission": "AR Studio needs your camera for AR experiences." }
+        {
+          "cameraPermission": "AR Studio needs your camera for AR experiences."
+        }
       ],
       [
         "expo-av",
-        { "microphonePermission": "AR Studio needs your microphone to record videos." }
+        {
+          "microphonePermission": "AR Studio needs your microphone to record videos."
+        }
       ],
       [
         "expo-media-library",
@@ -38,6 +47,11 @@
           "isAccessMediaLocationEnabled": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b0f90e3b-4dfa-457a-82c3-f55ead9c1085"
+      }
+    }
   }
 }

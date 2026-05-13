@@ -104,7 +104,9 @@ export default function CameraScreen({ navigation }) {
       await MediaLibrary.saveToLibraryAsync(video.uri);
       Alert.alert('✓ Saved', 'Video saved to your gallery.');
     } catch (e) {
-      if (!e.message.includes('cancelled')) Alert.alert('Error', e.message);
+      if (!e.message?.includes('cancelled') && !e.message?.includes('stopped before') && !e.message?.includes('no data')) {
+        Alert.alert('Error', e.message);
+      }
     } finally {
       setRecording(false);
       clearInterval(recInterval.current);

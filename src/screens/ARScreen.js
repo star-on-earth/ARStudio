@@ -39,7 +39,7 @@ export default function ARScreen({ navigation, route }) {
       // Strip data URL prefix
       const raw = base64Data.replace(/^data:image\/\w+;base64,/, '');
       const uri = FileSystem.cacheDirectory + `ar_capture_${Date.now()}.jpg`;
-      await FileSystem.writeAsStringAsync(uri, raw, { encoding: FileSystem.EncodingType.Base64 });
+      await FileSystem.writeAsStringAsync(uri, raw, { encoding: 'base64' });
       const asset = await MediaLibrary.createAssetAsync(uri);
       await MediaLibrary.createAlbumAsync('AR Studio', asset, false);
       Alert.alert('✓ Saved', 'AR photo saved to your gallery.');
@@ -72,10 +72,12 @@ export default function ARScreen({ navigation, route }) {
       <WebView
         ref={webviewRef}
         style={StyleSheet.absoluteFill}
-        source={{ html: getHTML(feature) }}
+        source={{ html: getHTML(feature), baseUrl: 'https://localhost' }}
         javaScriptEnabled
         domStorageEnabled
         allowsInlineMediaPlayback
+        allowUniversalAccessFromFileURLs={true}
+        allowFileAccess={true}
         mediaPlaybackRequiresUserAction={false}
         allowsFullscreenVideo={false}
         onLoadStart={() => setLoading(true)}
